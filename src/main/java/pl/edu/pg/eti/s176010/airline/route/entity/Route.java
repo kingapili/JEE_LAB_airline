@@ -1,9 +1,11 @@
 package pl.edu.pg.eti.s176010.airline.route.entity;
 
+import java.io.Serializable;
+
 /**
  * Entity for plane route.
  */
-public class Route {
+public class Route implements Serializable {
 
     /**
      * Route's destination.

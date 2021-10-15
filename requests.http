@@ -1,0 +1,34 @@
+POST http://localhost:9080/airline/api/avatars/2
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="avatar"; filename="woman.png"
+
+< src/main/resources/pl.edu.pg.eti.s176010.airline.user.avatar/woman.png
+--WebAppBoundary--
+
+###
+GET http://localhost:9080/airline/api/users
+
+###
+
+GET http://localhost:9080/airline/api/users/2
+
+###
+
+GET http://localhost:9080/airline/api/avatars/2
+
+###
+
+DELETE http://localhost:9080/airline/api/avatars/3
+
+###
+
+PUT http://localhost:9080/airline/api/avatars/3
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="avatar"; filename="woman.png"
+
+< src/main/resources/pl.edu.pg.eti.s176010.airline.user.avatar/man.png
+--WebAppBoundary--

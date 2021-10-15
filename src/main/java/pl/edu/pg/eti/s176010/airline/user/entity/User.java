@@ -1,13 +1,29 @@
 package pl.edu.pg.eti.s176010.airline.user.entity;
 
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 /**
  * Entity for system user.
  */
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
+public class User implements Serializable {
 
-public class User {
+    /**
+     * User's id.
+     */
+    private Long id;
 
     /**
      * User's contact email.
@@ -28,5 +44,10 @@ public class User {
      * User's role.
      */
     private Role role;
+
+    /**
+     * User's avatar.
+     */
+    private String avatarFileName;
 
 }
