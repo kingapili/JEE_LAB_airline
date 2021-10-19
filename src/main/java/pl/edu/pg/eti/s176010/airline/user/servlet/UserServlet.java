@@ -53,7 +53,7 @@ public class UserServlet extends HttpServlet {
         public static final String USERS = "^/?$";
 
         /**
-         * Specified character.
+         * Specified ticket.
          */
         public static final String USER = "^/[0-9]+/?$";
 

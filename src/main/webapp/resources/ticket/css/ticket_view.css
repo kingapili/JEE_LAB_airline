@@ -1,0 +1,28 @@
+.ticket__grid {
+    display: grid;
+}
+
+.ticket__route {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.ticket__cost {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.ticket__date {
+    grid-column: 1;
+    grid-row: 4;
+}
+
+.ticket__time {
+    grid-column: 1;
+    grid-row: 5;
+}
+
+.ticket__zone {
+    grid-column: 1;
+    grid-row: 6;
+}

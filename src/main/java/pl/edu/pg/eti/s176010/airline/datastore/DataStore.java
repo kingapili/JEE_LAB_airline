@@ -1,17 +1,15 @@
 package pl.edu.pg.eti.s176010.airline.datastore;
 
 import lombok.extern.java.Log;
-import pl.edu.pg.eti.s176010.airline.route.entity.Route;
+import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
 import pl.edu.pg.eti.s176010.airline.serialization.CloningUtility;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * For the sake of simplification instead of using real database this example is using an data source object which
@@ -95,4 +93,130 @@ public class DataStore {
                             String.format("The user with id \"%d\" does not exist", user.getId()));
                 });
     }
+    /**
+     * Seeks for all routes.
+     *
+     * @return list (can be empty) of all routes
+     */
+    public synchronized List<Route> findAllRoutes() {
+        return new ArrayList<>(routes);
+    }
+
+    /**
+     * Seeks for the route in the memory storage.
+     *
+     * @param id id of the route
+     * @return container (can be empty) with route if present
+     */
+    public Optional<Route> findRoute(Long id) {
+        return routes.stream()
+                .filter(route -> route.getId().equals(id))
+                .findFirst()
+                .map(CloningUtility::clone);
+    }
+
+    /**
+     * Stores new route.
+     *
+     * @param route new route to be stored
+     * @throws IllegalArgumentException if route with provided name already exists
+     */
+    public synchronized void createRoute(Route route) throws IllegalArgumentException {
+        findRoute(route.getId()).ifPresentOrElse(
+                original -> {
+                    throw new IllegalArgumentException(
+                            String.format("The route id \"%s\" is not unique", route.getId()));
+                },
+                () -> routes.add(route));
+    }
+
+    /**
+     * Deletes existing ticket.
+     *
+     * @param id ticket's id
+     * @throws IllegalArgumentException if ticket with provided id does not exist
+     */
+    public synchronized void deleteRoute(Long id) throws IllegalArgumentException {
+        findRoute(id).ifPresentOrElse(
+                original -> routes.remove(original),
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The route with id \"%d\" does not exist", id));
+                });
+    }
+
+    /**
+     * Seeks for all tickets.
+     *
+     * @return list (can be empty) of all tickets
+     */
+    public synchronized List<Ticket> findAllTickets() {
+        return tickets.stream().map(CloningUtility::clone).collect(Collectors.toList());
+    }
+
+    /**
+     * Seeks for single ticket.
+     *
+     * @param id ticket's id
+     * @return container (can be empty) with ticket
+     */
+    public synchronized Optional<Ticket> findTicket(Long id) {
+        return tickets.stream()
+                .filter(ticket -> ticket.getId().equals(id))
+                .findFirst()
+                .map(CloningUtility::clone);
+    }
+
+    /**
+     * Stores new ticket.
+     *
+     * @param ticket new ticket
+     */
+    public synchronized void createTicket(Ticket ticket) throws IllegalArgumentException {
+        ticket.setId(findAllTickets().stream().mapToLong(Ticket::getId).max().orElse(0) + 1);
+        tickets.add(ticket);
+    }
+
+    /**
+     * Updates existing ticket.
+     *
+     * @param ticket ticket to be updated
+     * @throws IllegalArgumentException if ticket with the same id does not exist
+     */
+    public synchronized void updateTicket(Ticket ticket) throws IllegalArgumentException {
+        findTicket(ticket.getId()).ifPresentOrElse(
+                original -> {
+                    tickets.remove(original);
+                    tickets.add(ticket);
+                },
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The ticket with id \"%d\" does not exist", ticket.getId()));
+                });
+    }
+
+    /**
+     * Deletes existing ticket.
+     *
+     * @param id ticket's id
+     * @throws IllegalArgumentException if ticket with provided id does not exist
+     */
+    public synchronized void deleteTicket(Long id) throws IllegalArgumentException {
+        findTicket(id).ifPresentOrElse(
+                original -> tickets.remove(original),
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The ticket with id \"%d\" does not exist", id));
+                });
+    }
+
+    /**
+     * Get stream to be used (for filtering, sorting, etc) in repositories.
+     *
+     * @return ticket's stream
+     */
+    public Stream<Ticket> getTicketStream() {
+        return tickets.stream();
+    }
+
 }

@@ -20,11 +20,11 @@ GET http://localhost:9080/airline/api/avatars/2
 
 ###
 
-DELETE http://localhost:9080/airline/api/avatars/3
+DELETE http://localhost:9080/airline/api/avatars/2
 
 ###
 
-PUT http://localhost:9080/airline/api/avatars/3
+PUT http://localhost:9080/airline/api/avatars/2
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary

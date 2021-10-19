@@ -26,7 +26,7 @@ public class UserService {
     private UserRepository repository;
 
     /**
-     * @param repository repository for character entity
+     * @param repository repository for ticket entity
      */
     @Inject
     public UserService(UserRepository repository) {

@@ -1,0 +1,30 @@
+.ticket__form {
+    display: grid;
+    grid-template-columns: 300px;
+    grid-gap: 30px;
+    grid-row-gap: 30px;
+}
+
+.ticket__top_controls {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.ticket__datetime {
+    grid-column: 1;
+    grid-row: 2;
+}
+.ticket__cost {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.ticket__route {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.ticket__bottom_controls {
+    grid-column: 1;
+    grid-row: 4;
+}

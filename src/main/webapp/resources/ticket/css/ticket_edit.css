@@ -1,0 +1,14 @@
+.ticket__form {
+    display: grid;
+    grid-template-columns: 100px 200px;
+    grid-gap: 10px;
+}
+.ticket__datetime {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.ticket__save{
+    grid-column: 1;
+    grid-row: 2;
+}

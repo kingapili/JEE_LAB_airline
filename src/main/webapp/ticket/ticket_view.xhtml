@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{ticketView.id}" required="true"/>
+        <f:viewAction action="#{ticketView.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="ticket" name="css/ticket_view.css"/><!-- Automatically relocated to head. -->
+        <h:panelGroup layout="block">
+            <article class="text--justified">
+                <header><h2>Ticket: <h:outputText value="#{ticketView.ticket.id}"/></h2></header>
+                <div class="ticket__grid">
+                    <div class="ticket__route">
+                        Route:
+                        <h:link outcome="/route/route_view.xhtml" value="#{ticketView.ticket.routeName}">
+                            <f:param name="id" value="#{ticketView.ticket.routeId}"/>
+                        </h:link>
+                    </div>
+                    <div class="ticket__cost">
+                        Cost: $<h:outputText value="#{ticketView.ticket.cost}"/>
+                    </div>
+                    <div class="ticket__date">Date:
+                        <h:outputText value="#{ticketView.ticket.date.dayOfMonth} "/>
+                        <h:outputText value="#{ticketView.ticket.date.month} "/>
+                        <h:outputText value="#{ticketView.ticket.date.year}"/>
+                    </div>
+                    <div class="ticket__time">Time:
+                        <h:outputText value="#{ticketView.ticket.time}"/>
+                        <h:outputText value="#{ticketView.ticket.zoneOffSet}"/>
+                    </div>
+                </div>
+            </article>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>

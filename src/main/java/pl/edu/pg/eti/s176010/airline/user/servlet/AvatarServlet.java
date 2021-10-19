@@ -17,14 +17,14 @@ import java.io.IOException;
 import java.util.Optional;
 
 /**
- * Servlet for serving and uploading characters' avatars i raster image format.
+ * Servlet for serving and uploading tickets' avatars i raster image format.
  */
 @WebServlet(urlPatterns = AvatarServlet.Paths.AVATARS + "/*")
 @MultipartConfig(maxFileSize = 200 * 1024)
 public class AvatarServlet extends HttpServlet {
 
     /**
-     * Service for managing characters.
+     * Service for managing tickets.
      */
     private UserService service;
 
@@ -160,7 +160,7 @@ public class AvatarServlet extends HttpServlet {
     }
 
     /**
-     * Updates character's avatar. Receives avatar bytes from request and stores them in the data storage.
+     * Updates ticket's avatar. Receives avatar bytes from request and stores them in the data storage.
      *
      * @param request  http request
      * @param response http response

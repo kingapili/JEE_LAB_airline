@@ -1,21 +1,29 @@
 package pl.edu.pg.eti.s176010.airline.ticket.entity;
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
-import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
  * Entity for ticket owned by the user. Contains link to user (see @link {@link User}) for the sake of database relationship.
  */
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
 public class Ticket implements Serializable {
 
     /**
      * Ticket's id.
      */
-    private String id;
+    private Long id;
 
     /**
      * Ticket's cost.
@@ -30,11 +38,11 @@ public class Ticket implements Serializable {
     /**
      * Owner of this ticket.
      */
-    private User user;
+    //private User user;
 
     /**
      * Date for which ticket is bought.
      */
-    private LocalDate date;
+    private LocalDateTime dateTime;
 
 }

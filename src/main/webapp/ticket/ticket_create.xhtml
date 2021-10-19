@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+        <h:outputStylesheet library="ticket"
+                            name="css/ticket_create.css"/><!-- Automatically relocated to head. -->
+        <h:panelGroup layout="block">
+            <article class="text--justified">
+                <header><h2>Buy Ticket</h2></header>
+                <h:form class="ticket__form">
+
+                    <div class="ticket__datetime">
+                    <h:outputLabel for="date" value="Date (dd-MM-yyyy HH:mm):"/>
+                    <h:inputText class="ui-control ui-input" id="date" value="#{ticketCreate.ticket.dateTime}">
+                        <f:convertDateTime type="localDateTime" pattern = "dd-MM-yyyy HH:mm"/>
+                    </h:inputText>
+                    </div>
+
+                    <div class="ticket__cost">
+                    <h:outputLabel for="cost" value="Cost:"/>
+                    <h:inputText class="ui-control ui-input" id="cost" value="#{ticketCreate.ticket.cost}"/>
+                    </div>
+
+                    <div class="ticket__cost">
+                        <!-- Standard JSF approach. There is no possibility to add markup to label in the layout. -->
+                        <h:outputLabel for="route" value="Route:"/>
+                        <h:selectOneRadio id="route" value="#{ticketCreate.ticket.route}"
+                                          layout="pageDirection">
+                            <f:selectItems var="route" value="#{ticketCreate.routes}" itemValue="#{route.id}"
+                                           itemLabel="#{route.name}" itemLabelEscaped="false"/>
+                        </h:selectOneRadio>
+                    </div>
+
+                    <div class="ticket__bottom_controls">
+                    <h:commandButton class="ui-control ui-button" value="Save"
+                                     action="#{ticketCreate.saveAction()}"/>
+                    </div>
+                </h:form>
+            </article>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>

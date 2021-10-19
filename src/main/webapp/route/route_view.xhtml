@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/main.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{routeView.id}" required="true"/>
+        <f:viewAction action="#{routeView.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:panelGroup layout="block">
+            <article class="text--justified">
+                <header><h2>Route: <h:outputText value="#{routeView.route.name}"/></h2></header>
+                <div class="route_grid">
+                    <div class="route__from">
+                       From: <h:outputText value="#{routeView.route.startingPoint}"/>
+                    </div>
+                    <div class="route__to">
+                        To: <h:outputText value="#{routeView.route.destination}"/>
+                    </div>
+                    <div class="route__time">Time: <h:outputText value="#{routeView.route.duration}"/> min</div>
+                    <div class="route__distance">
+                        Distance: <h:outputText value="#{routeView.route.distance}"/> km
+                    </div>
+                </div>
+            </article>
+            <article class="text--justified">
+                <header><h2>Tickets</h2></header>
+                <h:link outcome="/ticket/ticket_create.xhtml" value="create ticket"/>
+                <h:dataTable value="#{routeView.tickets.tickets}" var="ticket" styleClass="data-table">
+                    <h:column>
+                        <f:facet name="header">ticket id</f:facet>
+                        <h:outputText value="#{ticket.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">view</f:facet>
+                        <h:link outcome="/ticket/ticket_view.xhtml" value="view">
+                            <f:param name="id" value="#{ticket.id}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">edit</f:facet>
+                        <h:link outcome="/ticket/ticket_edit.xhtml" value="edit">
+                            <f:param name="id" value="#{ticket.id}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">delete</f:facet>
+                        <h:form>
+                            <h:commandButton styleClass="ui-button ui-control" value="delete"
+                                             action="#{routeView.deleteTicketAction(ticket)}">
+                                <f:param name="routeId" value="#{routeView.id}"/>
+                            </h:commandButton>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </article>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>
