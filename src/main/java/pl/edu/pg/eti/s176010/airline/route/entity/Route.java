@@ -1,4 +1,4 @@
-package pl.edu.pg.eti.s176010.airline.ticket.entity;
+package pl.edu.pg.eti.s176010.airline.route.entity;
 
 import lombok.*;
 

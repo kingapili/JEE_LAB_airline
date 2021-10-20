@@ -1,8 +1,8 @@
-package pl.edu.pg.eti.s176010.airline.ticket.repository;
+package pl.edu.pg.eti.s176010.airline.route.repository;
 
 import pl.edu.pg.eti.s176010.airline.datastore.DataStore;
 import pl.edu.pg.eti.s176010.airline.repository.Repository;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

@@ -1,6 +1,7 @@
 package pl.edu.pg.eti.s176010.airline.ticket.service;
 
 import lombok.NoArgsConstructor;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.route.repository.RouteRepository;
 import pl.edu.pg.eti.s176010.airline.ticket.repository.TicketRepository;
@@ -59,7 +60,7 @@ public class TicketService {
     /**
      * @return all available tickets of the route
      */
-    public List<Ticket> findAllForRoute(Long routeId) {
+    public List<Ticket> findAllByRoute(Long routeId) {
         return ticketRepository.findAllByRoute(routeRepository.find(routeId).orElseThrow());
     }
 
@@ -108,4 +109,12 @@ public class TicketService {
         for(Ticket ticket : tickets){ ticketRepository.delete(ticket); }
     }
 
+    public Optional<Ticket> findByRoute(Long routeId, Long id) {
+        Optional<Route> profession = routeRepository.find(routeId);
+        if (profession.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return ticketRepository.findByProfessionAndId(profession.get(), id);
+        }
+    }
 }

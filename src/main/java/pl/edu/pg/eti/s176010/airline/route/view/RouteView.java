@@ -1,16 +1,13 @@
-package pl.edu.pg.eti.s176010.airline.ticket.view;
+package pl.edu.pg.eti.s176010.airline.route.view;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
-import pl.edu.pg.eti.s176010.airline.ticket.model.RouteModel;
-import pl.edu.pg.eti.s176010.airline.ticket.model.TicketModel;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.model.RouteModel;
 import pl.edu.pg.eti.s176010.airline.ticket.model.TicketsModel;
-import pl.edu.pg.eti.s176010.airline.ticket.service.RouteService;
+import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -70,7 +67,7 @@ public class RouteView implements Serializable {
      */
     public TicketsModel getTickets() {
         if (tickets == null) {
-            tickets = TicketsModel.entityToModelMapper().apply(ticketService.findAllForRoute(id));
+            tickets = TicketsModel.entityToModelMapper().apply(ticketService.findAllByRoute(id));
         }
         return tickets;
     }

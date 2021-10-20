@@ -1,7 +1,7 @@
-package pl.edu.pg.eti.s176010.airline.ticket.model;
+package pl.edu.pg.eti.s176010.airline.route.model;
 
 import lombok.*;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 
 import java.util.function.Function;
 

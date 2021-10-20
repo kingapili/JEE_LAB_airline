@@ -1,10 +1,9 @@
-package pl.edu.pg.eti.s176010.airline.ticket.model;
+package pl.edu.pg.eti.s176010.airline.route.model;
 
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -53,7 +52,7 @@ public class RoutesModel implements Serializable {
     /**
      * @return mapper for convenient converting entity object to model object
      */
-    public static Function<Collection<pl.edu.pg.eti.s176010.airline.ticket.entity.Route>, RoutesModel> entityToModelMapper() {
+    public static Function<Collection<pl.edu.pg.eti.s176010.airline.route.entity.Route>, RoutesModel> entityToModelMapper() {
         return routes -> {
             RoutesModel.RoutesModelBuilder model = RoutesModel.builder();
             routes.stream()

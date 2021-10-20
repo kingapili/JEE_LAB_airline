@@ -86,4 +86,10 @@ public class TicketRepository implements Repository<Ticket, Long> {
                 .collect(Collectors.toList());
     }
 
+    public Optional<Ticket> findByProfessionAndId(Route route, Long id) {
+        return store.getTicketStream()
+                .filter(ticket -> ticket.getRoute().equals(route) && ticket.getId().equals(id))
+                .findFirst()
+                .map(CloningUtility::clone);
+    }
 }

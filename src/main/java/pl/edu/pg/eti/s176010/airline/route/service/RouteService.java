@@ -1,8 +1,8 @@
-package pl.edu.pg.eti.s176010.airline.ticket.service;
+package pl.edu.pg.eti.s176010.airline.route.service;
 
 import lombok.NoArgsConstructor;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
-import pl.edu.pg.eti.s176010.airline.ticket.repository.RouteRepository;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.repository.RouteRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -36,6 +36,7 @@ public class RouteService {
     public Optional<Route> find(Long id) {
         return repository.find(id);
     }
+
 
     /**
      * @return container with route entity

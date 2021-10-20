@@ -1,8 +1,8 @@
-package pl.edu.pg.eti.s176010.airline.ticket.view;
+package pl.edu.pg.eti.s176010.airline.route.view;
 
 
-import pl.edu.pg.eti.s176010.airline.ticket.model.RoutesModel;
-import pl.edu.pg.eti.s176010.airline.ticket.service.RouteService;
+import pl.edu.pg.eti.s176010.airline.route.model.RoutesModel;
+import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
 import javax.enterprise.context.RequestScoped;
