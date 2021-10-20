@@ -2,7 +2,7 @@ package pl.edu.pg.eti.s176010.airline.ticket.service;
 
 import lombok.NoArgsConstructor;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
-import pl.edu.pg.eti.s176010.airline.ticket.repository.RouteRepository;
+import pl.edu.pg.eti.s176010.airline.route.repository.RouteRepository;
 import pl.edu.pg.eti.s176010.airline.ticket.repository.TicketRepository;
 
 import javax.enterprise.context.ApplicationScoped;

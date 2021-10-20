@@ -11,7 +11,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
@@ -68,8 +67,7 @@ public class TicketEdit implements Serializable {
      */
     public String saveAction() {
         service.update(TicketEditModel.modelToEntityUpdater().apply(service.find(id).orElseThrow(), ticket));
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
+        return "/ticket/ticket_view?faces-redirect=true&includeViewParams=true";
     }
 
 }

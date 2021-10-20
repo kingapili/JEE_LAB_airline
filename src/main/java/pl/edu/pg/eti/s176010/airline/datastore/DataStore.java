@@ -1,7 +1,7 @@
 package pl.edu.pg.eti.s176010.airline.datastore;
 
 import lombok.extern.java.Log;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.serialization.CloningUtility;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;

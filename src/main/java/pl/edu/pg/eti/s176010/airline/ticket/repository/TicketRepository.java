@@ -5,7 +5,7 @@ package pl.edu.pg.eti.s176010.airline.ticket.repository;
 import pl.edu.pg.eti.s176010.airline.datastore.DataStore;
 import pl.edu.pg.eti.s176010.airline.repository.Repository;
 import pl.edu.pg.eti.s176010.airline.serialization.CloningUtility;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
 import javax.enterprise.context.Dependent;

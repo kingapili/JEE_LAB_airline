@@ -2,6 +2,7 @@ package pl.edu.pg.eti.s176010.airline.ticket.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 
 import java.io.Serializable;

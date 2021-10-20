@@ -1,8 +1,8 @@
 package pl.edu.pg.eti.s176010.airline.configuration;
 
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
-import pl.edu.pg.eti.s176010.airline.ticket.service.RouteService;
+import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 import pl.edu.pg.eti.s176010.airline.user.entity.Role;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;

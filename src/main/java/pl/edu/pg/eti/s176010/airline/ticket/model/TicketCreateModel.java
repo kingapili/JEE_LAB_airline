@@ -1,12 +1,10 @@
 package pl.edu.pg.eti.s176010.airline.ticket.model;
 
 import lombok.*;
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.function.Function;
 
 /**

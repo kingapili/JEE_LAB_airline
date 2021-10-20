@@ -3,9 +3,9 @@ package pl.edu.pg.eti.s176010.airline.ticket.view;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.edu.pg.eti.s176010.airline.ticket.model.RouteModel;
+import pl.edu.pg.eti.s176010.airline.route.model.RouteModel;
 import pl.edu.pg.eti.s176010.airline.ticket.model.TicketCreateModel;
-import pl.edu.pg.eti.s176010.airline.ticket.service.RouteService;
+import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
 import javax.annotation.PostConstruct;
