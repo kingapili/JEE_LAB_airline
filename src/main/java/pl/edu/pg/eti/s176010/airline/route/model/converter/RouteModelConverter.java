@@ -1,8 +1,8 @@
-package pl.edu.pg.eti.s176010.airline.ticket.model.converter;
+package pl.edu.pg.eti.s176010.airline.route.model.converter;
 
-import pl.edu.pg.eti.s176010.airline.ticket.entity.Route;
-import pl.edu.pg.eti.s176010.airline.ticket.model.RouteModel;
-import pl.edu.pg.eti.s176010.airline.ticket.service.RouteService;
+import pl.edu.pg.eti.s176010.airline.route.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.model.RouteModel;
+import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -32,7 +32,6 @@ public class RouteModelConverter implements Converter<RouteModel> {
 
     @Override
     public RouteModel getAsObject(FacesContext context, UIComponent component, String value) {
-
         if (value == null || value.isBlank()) {
             return null;
         }
