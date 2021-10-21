@@ -122,12 +122,26 @@ public class DataStore {
      * @throws IllegalArgumentException if route with provided name already exists
      */
     public synchronized void createRoute(Route route) throws IllegalArgumentException {
+        route.setId(findAllRoutes().stream().mapToLong(Route::getId).max().orElse(0) + 1);
+        routes.add(route);
+    }
+
+    /**
+     * Updates existing route.
+     *
+     * @param route route to be updated
+     * @throws IllegalArgumentException if route with the same id does not exist
+     */
+    public synchronized void updateRoute(Route route) throws IllegalArgumentException {
         findRoute(route.getId()).ifPresentOrElse(
                 original -> {
-                    throw new IllegalArgumentException(
-                            String.format("The route id \"%s\" is not unique", route.getId()));
+                    routes.remove(original);
+                    routes.add(route);
                 },
-                () -> routes.add(route));
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The route with id \"%d\" does not exist", route.getId()));
+                });
     }
 
     /**

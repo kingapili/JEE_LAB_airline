@@ -18,7 +18,7 @@ public class UpdateTicketRequest {
     /**
      * Date for which ticket is bought.
      */
-    private LocalDateTime datetime;
+    private LocalDateTime dateTime;
 
     /**
      * Ticket's cost.
@@ -30,7 +30,7 @@ public class UpdateTicketRequest {
      */
     public static BiFunction<Ticket, UpdateTicketRequest, Ticket> dtoToEntityUpdater() {
         return (ticket, request) -> {
-            ticket.setDateTime(request.getDatetime());
+            ticket.setDateTime(request.getDateTime());
             ticket.setCost(request.getCost());
             return ticket;
         };

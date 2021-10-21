@@ -1,17 +1,18 @@
 package pl.edu.pg.eti.s176010.airline.ticket.controller;
 
+import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
+import pl.edu.pg.eti.s176010.airline.ticket.dto.CreateTicketRequest;
 import pl.edu.pg.eti.s176010.airline.ticket.dto.GetTicketResponse;
 import pl.edu.pg.eti.s176010.airline.ticket.dto.GetTicketsResponse;
+import pl.edu.pg.eti.s176010.airline.ticket.dto.UpdateTicketRequest;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,11 @@ public class RouteTicketController {
      * Service for managing tickets.
      */
     private TicketService ticketService;
+
+    /**
+     * Service for managing tickets.
+     */
+    private RouteService routeService;
 
     /**
      * JAX-RS requires no-args constructor.
@@ -38,18 +44,27 @@ public class RouteTicketController {
         this.ticketService = ticketService;
     }
 
+
+    /**
+     * @param routeService service for managing tickets
+     */
+    @Inject
+    public void setRouteService(RouteService routeService) {
+        this.routeService = routeService;
+    }
+
     /**
      * @param routeId id of the route
      * @return response with available tickets from selected route
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTickets(@PathParam("routeId") Long routeId) {
-       List<Ticket> tickets = ticketService.findAllByRoute(routeId);
+    public Response getRouteTickets(@PathParam("routeId") Long routeId) {
+       Optional<List<Ticket>> tickets = ticketService.findAllByRoute(routeId);
         if (tickets.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
-            return Response.ok(GetTicketsResponse.entityToDtoMapper().apply(tickets)).build();
+            return Response.ok(GetTicketsResponse.entityToDtoMapper().apply(tickets.get())).build();
         }
     }
 
@@ -61,12 +76,71 @@ public class RouteTicketController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTickets(@PathParam("routeId") Long routeId, @PathParam("id") Long id) {
+    public Response getRouteTicket(@PathParam("routeId") Long routeId, @PathParam("id") Long id) {
         Optional<Ticket> ticket = ticketService.findByRoute(routeId, id);
         if (ticket.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
             return Response.ok(GetTicketResponse.entityToDtoMapper().apply(ticket.get())).build();
+        }
+    }
+
+    /**
+     * Creates new ticket.
+     *
+     * @param request parsed request body containing info about new ticket
+     * @return response with created code and new ticket location url
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response postRouteTicket(@PathParam("routeId") Long routeId, CreateTicketRequest request) {
+        request.setRouteId(routeId);
+        Ticket ticket = CreateTicketRequest
+                .dtoToEntityMapper(id -> routeService.find(id).orElse(null))
+                .apply(request);
+        ticketService.create(ticket);
+        return Response.created(UriBuilder.fromMethod(RouteTicketController.class, "getRouteTicket")
+                .build(ticket.getId())).build();
+    }
+
+    /**
+     * Updates ticket.
+     *
+     * @param request parsed request body containing info about ticket
+     * @return response with accepted code
+     */
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response putRouteTicket(@PathParam("routeId") Long routeId, @PathParam("id") Long id,
+                                   UpdateTicketRequest request) {
+        Optional<Ticket> ticket = ticketService.findByRoute(routeId, id);
+
+        if (ticket.isPresent()) {
+            UpdateTicketRequest.dtoToEntityUpdater().apply(ticket.get(), request);
+
+            ticketService.update(ticket.get());
+            return Response.noContent().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    /**
+     * Delete ticket.
+     *
+     * @return response with accepted code
+     */
+    @DELETE
+    @Path("{id}")
+    public Response deleteRouteTicket(@PathParam("routeId") Long routeId, @PathParam("id") Long id) {
+        Optional<Ticket> ticket = ticketService.findByRoute(routeId, id);
+
+        if (ticket.isPresent()) {
+            ticketService.delete(ticket.get().getId());
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 

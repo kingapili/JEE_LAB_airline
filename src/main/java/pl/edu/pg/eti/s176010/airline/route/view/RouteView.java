@@ -67,7 +67,7 @@ public class RouteView implements Serializable {
      */
     public TicketsModel getTickets() {
         if (tickets == null) {
-            tickets = TicketsModel.entityToModelMapper().apply(ticketService.findAllByRoute(id));
+            tickets = TicketsModel.entityToModelMapper().apply(ticketService.findAllByRoute(id).get());
         }
         return tickets;
     }

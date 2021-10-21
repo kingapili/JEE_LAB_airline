@@ -60,8 +60,13 @@ public class TicketService {
     /**
      * @return all available tickets of the route
      */
-    public List<Ticket> findAllByRoute(Long routeId) {
-        return ticketRepository.findAllByRoute(routeRepository.find(routeId).orElseThrow());
+    public Optional<List<Ticket>> findAllByRoute(Long routeId) {
+        Optional<Route> route = routeRepository.find(routeId);
+        if (route.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(ticketRepository.findAllByRoute(route.get()));
+        }
     }
 
     /**
@@ -110,11 +115,11 @@ public class TicketService {
     }
 
     public Optional<Ticket> findByRoute(Long routeId, Long id) {
-        Optional<Route> profession = routeRepository.find(routeId);
-        if (profession.isEmpty()) {
+        Optional<Route> route = routeRepository.find(routeId);
+        if (route.isEmpty()) {
             return Optional.empty();
         } else {
-            return ticketRepository.findByProfessionAndId(profession.get(), id);
+            return ticketRepository.findByRouteAndId(route.get(), id);
         }
     }
 }

@@ -3,6 +3,7 @@ package pl.edu.pg.eti.s176010.airline.route.service;
 import lombok.NoArgsConstructor;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.route.repository.RouteRepository;
+import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -52,6 +53,15 @@ public class RouteService {
      */
     public void create(Route route) {
         repository.create(route);
+    }
+
+    /**
+     * Updates existing route.
+     *
+     * @param route route to be updated
+     */
+    public void update(Route route) {
+        repository.update(route);
     }
 
     /**

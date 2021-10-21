@@ -51,7 +51,7 @@ public class RouteRepository implements Repository<Route, Long> {
 
     @Override
     public void update(Route entity) {
-        throw new UnsupportedOperationException("Operation not implemented.");
+        store.updateRoute(entity);
     }
 
 }
