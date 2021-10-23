@@ -7,6 +7,7 @@ import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,7 @@ public class RouteService {
      *
      * @param route new route to be saved
      */
+    @Transactional
     public void create(Route route) {
         repository.create(route);
     }
@@ -60,6 +62,7 @@ public class RouteService {
      *
      * @param route route to be updated
      */
+    @Transactional
     public void update(Route route) {
         repository.update(route);
     }
@@ -69,6 +72,7 @@ public class RouteService {
      *
      * @param id existing route's id to be deleted
      */
+    @Transactional
     public void delete(Long id) {
         repository.delete(repository.find(id).orElseThrow());
     }

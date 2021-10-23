@@ -1,57 +1,62 @@
 package pl.edu.pg.eti.s176010.airline.route.repository;
 
-import pl.edu.pg.eti.s176010.airline.datastore.DataStore;
+import lombok.extern.java.Log;
 import pl.edu.pg.eti.s176010.airline.repository.Repository;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Repository for route entity. Repositories should be used in business layer (e.g.: in services).
  */
-@Dependent
+@RequestScoped
+@Log
 public class RouteRepository implements Repository<Route, Long> {
 
     /**
-     * Underlying data store. In future should be replaced with database connection.
+     * Connection with the database (not thread safe).
      */
-    private DataStore store;
+    private EntityManager em;
 
-    /**
-     * @param store data store
-     */
-    @Inject
-    public RouteRepository(DataStore store) {
-        this.store = store;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
 
     @Override
     public Optional<Route> find(Long id) {
-        return store.findRoute(id);
+        return Optional.ofNullable(em.find(Route.class, id));
     }
 
     @Override
     public List<Route> findAll() {
-        return store.findAllRoutes();
+        return em.createQuery("select r from Route r", Route.class).getResultList();
     }
 
     @Override
     public void create(Route entity) {
-        store.createRoute(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Route entity) {
-        store.deleteRoute(entity.getId());
+        em.remove(em.find(Route.class, entity.getId()));
     }
 
     @Override
     public void update(Route entity) {
-        store.updateRoute(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(Route entity) {
+        em.detach(entity);
     }
 
 }

@@ -1,61 +1,76 @@
 package pl.edu.pg.eti.s176010.airline.ticket.repository;
 
-
-
-import pl.edu.pg.eti.s176010.airline.datastore.DataStore;
+import lombok.extern.java.Log;
 import pl.edu.pg.eti.s176010.airline.repository.Repository;
-import pl.edu.pg.eti.s176010.airline.serialization.CloningUtility;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Repository for ticket entity. Repositories should be used in business layer (e.g.: in services).
  */
-@Dependent
+@RequestScoped
+@Log
 public class TicketRepository implements Repository<Ticket, Long> {
 
     /**
-     * Underlying data store. In future should be replaced with database connection.
+     * Connection with the database (not thread safe).
      */
-    private DataStore store;
+    private EntityManager em;
 
-    /**
-     * @param store data store
-     */
-    @Inject
-    public TicketRepository(DataStore store) {
-        this.store = store;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public Optional<Ticket> find(Long id) {
-        return store.findTicket(id);
+        return Optional.ofNullable(em.find(Ticket.class, id));
     }
 
     @Override
     public List<Ticket> findAll() {
-        return store.findAllTickets();
+        return em.createQuery("select t from Ticket t", Ticket.class).getResultList();
     }
 
     @Override
     public void create(Ticket entity) {
-        store.createTicket(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Ticket entity) {
-        store.deleteTicket(entity.getId());
+        em.remove(em.find(Ticket.class, entity.getId()));
     }
 
     @Override
     public void update(Ticket entity) {
-        store.updateTicket(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(Ticket entity) {
+        em.detach(entity);
+    }
+
+
+    /**
+     * Seeks for all tickets for route.
+     *
+     * @param route tickets' route
+     * @return list (can be empty) of user's tickets
+     */
+    public List<Ticket> findAllByRoute(Route route) {
+        return em.createQuery("select t from Ticket t where t.route = :route", Ticket.class)
+                .setParameter("route", route)
+                .getResultList();
     }
 
     /**
@@ -65,31 +80,14 @@ public class TicketRepository implements Repository<Ticket, Long> {
      * @param route ticket's route
      * @return container (can be empty) with ticket
      */
-    public Optional<Ticket> findByIdAndRoute(Long id, Route route) {
-        return store.getTicketStream()
-                .filter(ticket -> ticket.getRoute().equals(route))
-                .filter(ticket -> ticket.getId().equals(id))
-                .findFirst()
-                .map(CloningUtility::clone);
-    }
-
-    /**
-     * Seeks for all tickets for route.
-     *
-     * @param route tickets' route
-     * @return list (can be empty) of user's tickets
-     */
-    public List<Ticket> findAllByRoute(Route route) {
-        return store.getTicketStream()
-                .filter(ticket -> ticket.getRoute().equals(route))
-                .map(CloningUtility::clone)
-                .collect(Collectors.toList());
-    }
-
     public Optional<Ticket> findByRouteAndId(Route route, Long id) {
-        return store.getTicketStream()
-                .filter(ticket -> ticket.getRoute().equals(route) && ticket.getId().equals(id))
-                .findFirst()
-                .map(CloningUtility::clone);
+        try {
+            return Optional.of(em.createQuery("select t from Ticket t where t.id = :id and t.route = :route", Ticket.class)
+                    .setParameter("route", route)
+                    .setParameter("id", id)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 }

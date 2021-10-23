@@ -8,6 +8,7 @@ import pl.edu.pg.eti.s176010.airline.user.repository.UserRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -53,11 +54,13 @@ public class UserService {
      *
      * @param user new user to be saved
      */
+    @Transactional
     public void create(User user) {
         repository.create(user);
     }
 
 
+    @Transactional
     public void updateAvatar(Long id, InputStream inputStream, String dirPath) {
         repository.find(id).ifPresent(user -> {
             try {
@@ -66,33 +69,35 @@ public class UserService {
                 String fileName = id + ".png";
                 FileUtility.saveFile(dirPath,fileName,inputStream.readAllBytes());
                 user.setAvatarFileName(fileName);
-                repository.update(user);
+                //repository.update(user);
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
         });
     }
 
+    @Transactional
     public void createAvatar(Long id, InputStream inputStream, String dirPath) {
         repository.find(id).ifPresent(user -> {
             try {
                 String fileName = id + ".png";
                 FileUtility.saveFile(dirPath,fileName,inputStream.readAllBytes());
                 user.setAvatarFileName(fileName);
-                repository.update(user);
+                //repository.update(user);
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
         });
     }
 
+    @Transactional
     public void deleteAvatar(Long id, String dirPath) {
         repository.find(id).ifPresent(user -> {
             try {
                 var avatarFileName = user.getAvatarFileName();
                 FileUtility.deleteFile(dirPath, avatarFileName);
                 user.setAvatarFileName(null);
-                repository.update(user);
+                //repository.update(user);
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }

@@ -10,6 +10,7 @@ import pl.edu.pg.eti.s176010.airline.user.service.UserService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
+import javax.enterprise.context.control.RequestContextController;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -39,11 +40,15 @@ public class InitializedData {
      */
     private final RouteService routeService;
 
+    private RequestContextController requestContextController;
+
     @Inject
-    public InitializedData(TicketService ticketService, UserService userService, RouteService routeService) {
+    public InitializedData(TicketService ticketService, UserService userService, RouteService routeService,
+                           RequestContextController requestContextController) {
         this.ticketService = ticketService;
         this.userService = userService;
         this.routeService = routeService;
+        this.requestContextController = requestContextController;
     }
 
     public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
@@ -56,6 +61,7 @@ public class InitializedData {
      *
      */
     private synchronized void init() {
+        requestContextController.activate();// start request scope in order to inject request scoped repositories
         //users
         User admin = User.builder()
                 .id(0L)
@@ -145,6 +151,8 @@ public class InitializedData {
 
         ticketService.create(gda_waw1);
         ticketService.create(gda_waw2);
+
+        requestContextController.deactivate();
 
     }
 
