@@ -2,6 +2,7 @@ package pl.edu.pg.eti.s176010.airline.ticket.model;
 
 import lombok.*;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
+import pl.edu.pg.eti.s176010.airline.route.model.RouteModel;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class TicketCreateModel {
     /**
      * Ticket's route.
      */
-    private Long route;
+    private RouteModel route;
 
     /**
      * @param routeFunction function for converting route name to route entity object
@@ -44,7 +45,7 @@ public class TicketCreateModel {
         return model -> Ticket.builder()
                 .cost(model.getCost())
                 .dateTime(model.dateTime)
-                .route(routeFunction.apply(model.getRoute()))
+                .route(routeFunction.apply(model.getRoute().getId()))
                 .build();
     }
 

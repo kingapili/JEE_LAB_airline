@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.edu.pg.eti.s176010.airline.route.model.RouteModel;
+import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.ticket.model.TicketCreateModel;
 import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
@@ -78,9 +79,10 @@ public class TicketCreate implements Serializable {
 
 
     public String saveAction() {
-        service.create(TicketCreateModel.modelToEntityMapper(
-                routeId -> routeService.find(routeId).orElseThrow()).apply(ticket));
-        return "/route/route_list.xhtml?faces-redirect=true";
+        Ticket newTicket = TicketCreateModel.modelToEntityMapper(
+                routeId -> routeService.find(routeId).orElseThrow()).apply(ticket);
+        service.create(newTicket);
+        return "/ticket/ticket_view.xhtml?faces-redirect=true&id="+newTicket.getId();
     }
 
 }
