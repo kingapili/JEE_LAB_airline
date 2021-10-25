@@ -99,8 +99,9 @@ public class RouteTicketController {
                 .dtoToEntityMapper(id -> routeService.find(id).orElse(null))
                 .apply(request);
         ticketService.create(ticket);
-        return Response.created(UriBuilder.fromMethod(RouteTicketController.class, "getRouteTicket")
-                .build(ticket.getId())).build();
+        return Response.created(UriBuilder.fromResource(RouteTicketController.class)
+                .path(RouteTicketController.class,"getRouteTicket")
+                .build(ticket.getRoute().getId(), ticket.getId())).build();
     }
 
     /**

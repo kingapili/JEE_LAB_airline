@@ -92,7 +92,7 @@ public class RouteController {
     public Response postRoute(CreateRouteRequest request) {
         Route route = CreateRouteRequest.dtoToEntityMapper().apply(request);
         service.create(route);
-        return Response.created(UriBuilder.fromMethod(RouteController.class, "getRoute")
+        return Response.created(UriBuilder.fromResource(RouteController.class).path(RouteController.class, "getRoute")
                 .build(route.getId())).build();
     }
 
