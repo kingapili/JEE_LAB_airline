@@ -8,7 +8,6 @@ import pl.edu.pg.eti.s176010.airline.ticket.repository.TicketRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,10 +74,18 @@ public class TicketService {
      *
      * @param ticket new ticket
      */
-    @Transactional
     public void create(Ticket ticket) {
         ticketRepository.create(ticket);
-        routeRepository.find(ticket.getRoute().getId()).ifPresent(route -> route.getTickets().add(ticket));
+    }
+
+    /**
+     * Assigns currently logged route to passed new ticket and saves it in data store,
+     *
+     * @param ticket new ticket to be saved
+     */
+    public void createForRoute(Ticket ticket, Long routeId) {
+        ticket.setRoute(routeRepository.find(routeId).orElseThrow());
+        ticketRepository.create(ticket);
     }
 
     /**
@@ -86,14 +93,7 @@ public class TicketService {
      *
      * @param ticket ticket to be updated
      */
-    @Transactional
     public void update(Ticket ticket) {
-        Ticket original = ticketRepository.find(ticket.getId()).orElseThrow();
-        ticketRepository.detach(original);
-        if (!original.getRoute().getId().equals(ticket.getRoute().getId())) {
-            original.getRoute().getTickets().removeIf(ticketToRemove -> ticketToRemove.getId().equals(ticket.getId()));
-            routeRepository.find(ticket.getRoute().getId()).ifPresent(route -> route.getTickets().add(ticket));
-        }
         ticketRepository.update(ticket);
     }
 
@@ -102,11 +102,16 @@ public class TicketService {
      *
      * @param ticketId existing ticket's id to be deleted
      */
-    @Transactional
     public void delete(Long ticketId) {
-        Ticket ticket = ticketRepository.find(ticketId).orElseThrow();
-        ticket.getRoute().getTickets().remove(ticket);
-        ticketRepository.delete(ticket);
+        ticketRepository.delete(ticketRepository.find(ticketId).orElseThrow());
+    }
+
+    /**
+     * deletes all available tickets of the route
+     */
+    public void deleteAllByRoute(Long routeId) {
+        List<Ticket> tickets = ticketRepository.findAllByRoute(routeRepository.find(routeId).orElseThrow());
+        for(Ticket ticket : tickets){ ticketRepository.delete(ticket); }
     }
 
     public Optional<Ticket> findByRoute(Long routeId, Long id) {

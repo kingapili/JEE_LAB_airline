@@ -5,7 +5,6 @@ import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -20,15 +19,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-@Entity
-@Table(name="tickets")
 public class Ticket implements Serializable {
 
     /**
      * Ticket's id.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -39,21 +34,16 @@ public class Ticket implements Serializable {
     /**
      * Ticket's plane route.
      */
-    @ManyToOne
-    @JoinColumn(name = "route")
     private Route route;
 
     /**
      * Owner of this ticket.
      */
-    //@ManyToOne
-    //@JoinColumn(name ="user")
     //private User user;
 
     /**
      * Date for which ticket is bought.
      */
-    @Column(name = "date_time")
     private LocalDateTime dateTime;
 
 }

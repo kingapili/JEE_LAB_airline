@@ -128,6 +128,7 @@ public class RouteController {
     public Response deleteRoute(@PathParam("id") Long id) {
         Optional<Route> route = service.find(id);
         if (route.isPresent()) {
+            ticketService.deleteAllByRoute(id);
             service.delete(id);
             return Response.ok().build();
         } else {

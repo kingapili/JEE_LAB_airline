@@ -1,17 +1,17 @@
 
-GET http://localhost:9080/airline/api/routes/2/tickets
+GET http://localhost:9080/airline/api/routes/1/tickets
 
 ###
 
-GET http://localhost:9080/airline/api/routes/2/tickets/5
+GET http://localhost:9080/airline/api/routes/1/tickets/1
 
 ###
 
-DELETE http://localhost:9080/airline/api/routes/2/tickets/4
+DELETE http://localhost:9080/airline/api/routes/1/tickets/1
 
 ###
 
-POST http://localhost:9080/airline/api/routes/2/tickets/
+POST http://localhost:9080/airline/api/routes/1/tickets/
 Content-Type: application/json;
 
 {
@@ -22,10 +22,10 @@ Content-Type: application/json;
 
 ###
 
-PUT http://localhost:9080/airline/api/routes/2/tickets/5
+PUT http://localhost:9080/airline/api/routes/1/tickets/1
 Content-Type: application/json;
 
 {
   "cost": 99.99,
-  "dateTime": "2016-01-26T21:34:00"
+  "dateTime": "2016-01-25T21:34:00"
 }

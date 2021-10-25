@@ -58,6 +58,7 @@ public class RouteList implements Serializable {
      * @return navigation case to list_routes
      */
     public String deleteAction(RoutesModel.Route route) {
+        ticketService.deleteAllByRoute(route.getId());
         service.delete(route.getId());
         return "route_list?faces-redirect=true";
     }
