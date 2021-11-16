@@ -5,7 +5,9 @@ import pl.edu.pg.eti.s176010.airline.servlet.ServletUtility;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 import pl.edu.pg.eti.s176010.airline.user.service.UserService;
 
-import javax.inject.Inject;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
+import javax.ejb.EJBAccessException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -21,16 +23,25 @@ import java.util.Optional;
  */
 @WebServlet(urlPatterns = AvatarServlet.Paths.AVATARS + "/*")
 @MultipartConfig(maxFileSize = 200 * 1024)
+@RolesAllowed("USER")//Role.USER) TODO
 public class AvatarServlet extends HttpServlet {
 
     /**
      * Service for managing tickets.
      */
-    private UserService service;
+    private UserService userService;
 
-    @Inject
-    public AvatarServlet(UserService service) {
-        this.service = service;
+
+    public AvatarServlet() {
+
+    }
+
+    /**
+     * @param userService service for managing users
+     */
+    @EJB
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -57,6 +68,7 @@ public class AvatarServlet extends HttpServlet {
          */
         public static final String USER_WITH_AVATAR = "^/[0-9]+/?$";
 
+
     }
 
     /**
@@ -75,45 +87,76 @@ public class AvatarServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = ServletUtility.parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (Paths.AVATARS.equals(servletPath)) {
-            if (path.matches(Patterns.USER_WITH_AVATAR)) {
-                getAvatar(request, response);
+        try {
+            if (Paths.AVATARS.equals(servletPath)) {
+                Optional<User> user;
+                if (path.matches(Patterns.USER_WITH_AVATAR)) {
+                    Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+                    user = userService.find(id);
+                }
+                else {
+                    user = userService.findCallerPrincipal();
+
+                }
+                getAvatar(request, response, user);
                 return;
             }
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (EJBAccessException ex) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = ServletUtility.parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (Paths.AVATARS.equals(servletPath)) {
-            if (path.matches(Patterns.USER_WITH_AVATAR)) {
-                putAvatar(request, response);
+        try {
+            if (Paths.AVATARS.equals(servletPath)) {
+                Optional<User> user;
+                if (path.matches(Patterns.USER_WITH_AVATAR)) {
+                    Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+                    user = userService.find(id);
+                }
+                else {
+                    user = userService.findCallerPrincipal();
+
+                }
+                putAvatar(request, response, user);
                 return;
             }
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (EJBAccessException ex) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = ServletUtility.parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (Paths.AVATARS.equals(servletPath)) {
-            if (path.matches(Patterns.USER_WITH_AVATAR)) {
-                postAvatar(request, response);
+        try {
+            if (Paths.AVATARS.equals(servletPath)) {
+                Optional<User> user;
+                if (path.matches(Patterns.USER_WITH_AVATAR)) {
+                    Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+                    user = userService.find(id);
+                }
+                else {
+                    user = userService.findCallerPrincipal();
+
+                }
+                postAvatar(request, response, user);
                 return;
             }
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (EJBAccessException ex) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    private void postAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = service.find(id);
-
+    private void postAvatar(HttpServletRequest request, HttpServletResponse response, Optional<User> user)
+            throws IOException, ServletException {
         if (user.isPresent()) {
             if(user.get().getAvatarFileName()!=null)
             {
@@ -123,7 +166,7 @@ public class AvatarServlet extends HttpServlet {
             Part avatar = request.getPart(Parameters.AVATAR);
             if (avatar != null) {
                 String dirPath = getServletContext().getInitParameter("storedFilePath");
-                service.createAvatar(id, avatar.getInputStream(), dirPath);
+                userService.createAvatar(user.get().getId(), avatar.getInputStream(), dirPath);
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);
             }
             else
@@ -137,22 +180,30 @@ public class AvatarServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = ServletUtility.parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (Paths.AVATARS.equals(servletPath)) {
-            if (path.matches(Patterns.USER_WITH_AVATAR)) {
-                deleteAvatar(request, response);
+        try {
+            if (Paths.AVATARS.equals(servletPath)) {
+                Optional<User> user;
+                if (path.matches(Patterns.USER_WITH_AVATAR)) {
+                    Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+                    user = userService.find(id);
+                }
+                else {
+                    user = userService.findCallerPrincipal();
+
+                }
+                deleteAvatar(request, response, user);
                 return;
             }
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (EJBAccessException ex) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    private void deleteAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = service.find(id);
-
+    private void deleteAvatar(HttpServletRequest request, HttpServletResponse response, Optional<User> user) throws IOException {
         if (user.isPresent() && user.get().getAvatarFileName()!=null) {
             String dirPath = getServletContext().getInitParameter("storedFilePath");
-            service.deleteAvatar(id, dirPath);
+            userService.deleteAvatar(user.get().getId(), dirPath);
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -167,15 +218,13 @@ public class AvatarServlet extends HttpServlet {
      * @throws IOException      if any input or output exception occurred
      * @throws ServletException if this request is not of type multipart/form-data
      */
-    private void putAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = service.find(id);
-
+    private void putAvatar(HttpServletRequest request, HttpServletResponse response, Optional<User> user)
+            throws IOException, ServletException {
         if (user.isPresent() && user.get().getAvatarFileName()!=null) {
             Part avatar = request.getPart(Parameters.AVATAR);
             if (avatar != null) {
                 String dirPath = getServletContext().getInitParameter("storedFilePath");
-                service.updateAvatar(id, avatar.getInputStream(), dirPath);
+                userService.updateAvatar(user.get().getId(), avatar.getInputStream(), dirPath);
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);
             }
             else
@@ -192,10 +241,7 @@ public class AvatarServlet extends HttpServlet {
      * @param response http response
      * @throws IOException if any input or output exception occurred
      */
-    private void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = service.find(id);
-
+    private void getAvatar(HttpServletRequest request, HttpServletResponse response, Optional<User> user) throws IOException {
         if (user.isPresent() && user.get().getAvatarFileName()!=null) {
             String dirPath = getServletContext().getInitParameter("storedFilePath");
             byte[] avatar = FileUtility.getBytes(dirPath, user.get().getAvatarFileName());

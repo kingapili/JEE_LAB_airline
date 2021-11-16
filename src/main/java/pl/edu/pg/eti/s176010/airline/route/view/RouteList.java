@@ -5,6 +5,7 @@ import pl.edu.pg.eti.s176010.airline.route.model.RoutesModel;
 import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,21 +21,35 @@ public class RouteList implements Serializable {
     /**
      * Service for managing routes.
      */
-    private final RouteService service;
+    private RouteService routeService;
 
     /**
      * Service for managing tickets.
      */
-    private final TicketService ticketService;
+    private TicketService ticketService;
 
     /**
      * Routes list exposed to the view.
      */
     private RoutesModel routes;
 
-    @Inject
-    public RouteList(TicketService ticketService, RouteService service) {
-        this.service = service;
+
+    public RouteList() {
+    }
+
+    /**
+     * @param routeService service for managing routes
+     */
+    @EJB
+    public void setRouteService(RouteService routeService) {
+        this.routeService = routeService;
+    }
+
+    /**
+     * @param ticketService service for managing routes
+     */
+    @EJB
+    public void setTicketService(TicketService ticketService) {
         this.ticketService = ticketService;
     }
 
@@ -46,7 +61,7 @@ public class RouteList implements Serializable {
      */
     public RoutesModel getRoutes() {
         if (routes == null) {
-            routes = RoutesModel.entityToModelMapper().apply(service.findAll());
+            routes = RoutesModel.entityToModelMapper().apply(routeService.findAll());
         }
         return routes;
     }
@@ -57,9 +72,9 @@ public class RouteList implements Serializable {
      * @param route route to be removed
      * @return navigation case to list_routes
      */
-    public String deleteAction(RoutesModel.Route route) {
-        service.delete(route.getId());
-        return "route_list?faces-redirect=true";
+    public void deleteAction(RoutesModel.Route route) {
+        routeService.delete(route.getId());
+        routes = null;
     }
 
 }

@@ -11,26 +11,26 @@
     </f:metadata>
 
     <ui:define name="content">
-        <h:outputStylesheet library="ticket" name="css/ticket_view.css"/><!-- Automatically relocated to head. -->
+        <h:outputStylesheet library="ticket" name="css/ticket_view.css"/>
         <h:panelGroup layout="block">
             <article class="text--justified">
-                <header><h2>Ticket: <h:outputText value="#{ticketView.ticket.id}"/></h2></header>
+                <header><h2>#{messages.ticket}: <h:outputText value="#{ticketView.ticket.id}"/></h2></header>
                 <div class="ticket__grid">
                     <div class="ticket__route">
-                        Route:
+                        #{messages.route}:
                         <h:link outcome="/route/route_view.xhtml" value="#{ticketView.ticket.routeName}">
                             <f:param name="id" value="#{ticketView.ticket.routeId}"/>
                         </h:link>
                     </div>
                     <div class="ticket__cost">
-                        Cost: $<h:outputText value="#{ticketView.ticket.cost}"/>
+                        #{messages.cost}: $<h:outputText value="#{ticketView.ticket.cost}"/>
                     </div>
-                    <div class="ticket__date">Date:
+                    <div class="ticket__date">#{messages.date}:
                         <h:outputText value="#{ticketView.ticket.date.dayOfMonth} "/>
                         <h:outputText value="#{ticketView.ticket.date.month} "/>
                         <h:outputText value="#{ticketView.ticket.date.year}"/>
                     </div>
-                    <div class="ticket__time">Time:
+                    <div class="ticket__time">#{messages.time}:
                         <h:outputText value="#{ticketView.ticket.time}"/>
                         <h:outputText value="#{ticketView.ticket.zoneOffSet}"/>
                     </div>

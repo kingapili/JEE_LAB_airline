@@ -8,6 +8,7 @@ import pl.edu.pg.eti.s176010.airline.ticket.model.TicketsModel;
 import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -27,12 +28,12 @@ public class RouteView implements Serializable {
     /**
      * Service for managing tickets.
      */
-    private final TicketService ticketService;
+    private TicketService ticketService;
 
     /**
      * Service for managing tickets.
      */
-    private final RouteService routeService;
+    private RouteService routeService;
 
     /**
      * Route id.
@@ -52,11 +53,23 @@ public class RouteView implements Serializable {
      */
     private TicketsModel tickets;
 
-    @Inject
-    public RouteView(TicketService ticketService, RouteService routeService) {
+    public RouteView() {
+    }
 
-        this.ticketService = ticketService;
+    /**
+     * @param routeService service for managing routes
+     */
+    @EJB
+    public void setRouteService(RouteService routeService) {
         this.routeService = routeService;
+    }
+
+    /**
+     * @param ticketService service for managing routes
+     */
+    @EJB
+    public void setTicketService(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     /**
@@ -67,7 +80,7 @@ public class RouteView implements Serializable {
      */
     public TicketsModel getTickets() {
         if (tickets == null) {
-            tickets = TicketsModel.entityToModelMapper().apply(ticketService.findAllByRoute(id).get());
+            tickets = TicketsModel.entityToModelMapper().apply(ticketService.findAllByRouteBasedOnCallerPrincipal(id).get());
         }
         return tickets;
     }
@@ -78,10 +91,9 @@ public class RouteView implements Serializable {
      * @param ticket ticket to be removed
      * @return navigation case to list_tickets
      */
-    public String deleteTicketAction(TicketsModel.Ticket ticket) {
+    public void deleteTicketAction(TicketsModel.Ticket ticket) {
         ticketService.delete(ticket.getId());
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
+        tickets = null;
     }
 
     /**

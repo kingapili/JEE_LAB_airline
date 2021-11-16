@@ -4,11 +4,11 @@ import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.route.model.RouteModel;
 import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 
+import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -23,11 +23,18 @@ public class RouteModelConverter implements Converter<RouteModel> {
     /**
      * Route for routes management.
      */
-    private RouteService service;
+    private RouteService routeService;
 
-    @Inject
-    public RouteModelConverter(RouteService service) {
-        this.service = service;
+
+    public RouteModelConverter(){
+    }
+
+    /**
+     * @param routeService service for managing routes
+     */
+    @EJB
+    public void setRouteService(RouteService routeService) {
+        this.routeService = routeService;
     }
 
     @Override
@@ -36,7 +43,7 @@ public class RouteModelConverter implements Converter<RouteModel> {
             return null;
         }
         Long id = Long.parseLong(value);
-        Optional<Route> route = service.find(id);
+        Optional<Route> route = routeService.find(id);
         return route.isEmpty() ? null : RouteModel.entityToModelMapper().apply(route.get());
     }
 

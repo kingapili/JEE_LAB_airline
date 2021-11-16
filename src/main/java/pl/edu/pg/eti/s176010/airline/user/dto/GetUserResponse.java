@@ -1,7 +1,6 @@
 package pl.edu.pg.eti.s176010.airline.user.dto;
 
 import lombok.*;
-import pl.edu.pg.eti.s176010.airline.user.entity.Role;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 
 import java.time.LocalDate;
@@ -36,11 +35,6 @@ public class GetUserResponse {
     private LocalDate birthDate;
 
     /**
-     * User's role.
-     */
-    private Role role;
-
-    /**
      * User's avatar.
      */
     private String avatarFileName;
@@ -53,7 +47,6 @@ public class GetUserResponse {
                 .name(user.getName())
                 .email(user.getEmail())
                 .birthDate(user.getBirthDate())
-                .role(user.getRole())
                 .avatarFileName(user.getAvatarFileName())
                 .build();
     }

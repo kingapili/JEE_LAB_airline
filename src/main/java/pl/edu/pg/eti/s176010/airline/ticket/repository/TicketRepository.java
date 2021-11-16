@@ -4,19 +4,24 @@ import lombok.extern.java.Log;
 import pl.edu.pg.eti.s176010.airline.repository.Repository;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
+import pl.edu.pg.eti.s176010.airline.user.entity.User;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Repository for ticket entity. Repositories should be used in business layer (e.g.: in services).
  */
-@RequestScoped
+
+@Dependent
 @Log
 public class TicketRepository implements Repository<Ticket, Long> {
 
@@ -90,4 +95,68 @@ public class TicketRepository implements Repository<Ticket, Long> {
             return Optional.empty();
         }
     }
+
+    /**
+     * Seeks for all user's tickets.
+     *
+     * @param user characters' owner
+     * @return list (can be empty) of user's Tickets.
+     */
+    public List<Ticket> findAllByUser(User user) {
+        return em.createQuery("select t from Ticket t where t.user = :user", Ticket.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
+    /**
+     * Seeks for all user's tickets.
+     *
+     * @param user characters' owner
+     * @return list (can be empty) of user's Tickets.
+     */
+    public List<Ticket> findAllByUserAndRoute(User user, Route route) {
+        return em.createQuery("select t from Ticket t where t.user = :user and t.route = :route", Ticket.class)
+                .setParameter("user", user)
+                .setParameter("route", route)
+                .getResultList();
+    }
+
+    /**
+     * Seeks for single user's ticket.
+     *
+     * @param id   ticket's id
+     * @param user ticket's owner
+     * @return container (can be empty) with ticket
+     */
+    public Optional<Ticket> findByIdAndUser(Long id, User user) {
+        try {
+            return Optional.of(em.createQuery("select t from Ticket t where t.id = :id and t.user = :user", Ticket.class)
+                    .setParameter("user", user)
+                    .setParameter("id", id)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Seeks for single user's ticket.
+     *
+     * @param id   ticket's id
+     * @param user ticket's owner
+     * @return container (can be empty) with ticket
+     */
+    public Optional<Ticket> findByIdAndUserAndRoute(Long id, User user, Route route) {
+        try {
+            return Optional.of(em.createQuery(
+                    "select t from Ticket t where t.id = :id and t.user = :user and t.route = :route", Ticket.class)
+                    .setParameter("user", user)
+                    .setParameter("id", id)
+                    .setParameter("route", route)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
+    }
+
 }

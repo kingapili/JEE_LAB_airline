@@ -4,13 +4,11 @@ package pl.edu.pg.eti.s176010.airline.user.entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Entity for system user.
@@ -30,6 +28,7 @@ public class User implements Serializable {
      * User's id.
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -49,10 +48,21 @@ public class User implements Serializable {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+
     /**
-     * User's role.
+     * User's security roles.
      */
-    private Role role;
+    @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "user"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(value = EnumType.STRING)
+    private List<Role> roles;
+
+    /**
+     * User's password.
+     */
+    @ToString.Exclude
+    private String password;
 
     /**
      * User's avatar.

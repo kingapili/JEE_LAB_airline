@@ -8,13 +8,18 @@ import pl.edu.pg.eti.s176010.airline.user.entity.Role;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 import pl.edu.pg.eti.s176010.airline.user.service.UserService;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.*;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
-import javax.enterprise.context.control.RequestContextController;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Listener started automatically on servlet context initialized. Fetches instance of the datasource from the servlet
@@ -22,37 +27,28 @@ import java.time.LocalDateTime;
  * in cases of empty database. When using persistence storage application instance should be initialized only during
  * first run in order to init database with starting data. Good place to create first default admin user.
  */
-@ApplicationScoped
-public class InitializedData {
+@Singleton
+@Startup
+public class InitializeData {
 
     /**
-     * Service for tickets operations.
+     * Password hashing algorithm.
      */
-    private final TicketService ticketService;
+    private Pbkdf2PasswordHash pbkdf;
 
-    /**
-     * Service for users operations.
-     */
-    private final UserService userService;
+    private EntityManager em;
 
-    /**
-     * Service for routes operations.
-     */
-    private final RouteService routeService;
-
-    private RequestContextController requestContextController;
-
-    @Inject
-    public InitializedData(TicketService ticketService, UserService userService, RouteService routeService,
-                           RequestContextController requestContextController) {
-        this.ticketService = ticketService;
-        this.userService = userService;
-        this.routeService = routeService;
-        this.requestContextController = requestContextController;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
+    @Inject
+    public void setPbkdf(Pbkdf2PasswordHash pbkdf) {
+        this.pbkdf = pbkdf;
+    }
+
+    public InitializeData() {
     }
 
     /**
@@ -60,53 +56,52 @@ public class InitializedData {
      * be created only once.
      *
      */
+    @PostConstruct
     private synchronized void init() {
-        requestContextController.activate();// start request scope in order to inject request scoped repositories
         //users
         User admin = User.builder()
-                .id(0L)
                 .name("Kinga Adminowska")
                 .birthDate(LocalDate.of(1999, 1, 7))
                 .email("admin@airline.example.com")
-                .role(Role.ADMIN)
+                .roles(List.of(Role.ADMIN))
+                .password(pbkdf.generate("adminadmin".toCharArray()))
                 .avatarFileName(null)
                 .build();
 
         User ryszard = User.builder()
-                .id(1L)
                 .name("Ryszard Pietruszka")
                 .birthDate(LocalDate.of(1983, 7, 22))
                 .email("piet@example.com")
-                .role(Role.USER)
+                .roles(List.of(Role.USER))
+                .password(pbkdf.generate("useruser".toCharArray()))
                 .avatarFileName(null)
                 .build();
 
         User janina = User.builder()
-                .id(2L)
                 .name("Janina Kowalska")
                 .birthDate(LocalDate.of(1979, 3, 30))
                 .email("j.kowal@example.com")
-                .role(Role.USER)
+                .roles(List.of(Role.USER))
+                .password(pbkdf.generate("useruser".toCharArray()))
                 .avatarFileName(null)
                 .build();
 
         User wojciech = User.builder()
-                .id(3L)
                 .name("Wojciech Okruszek")
                 .birthDate(LocalDate.of(1996, 11, 22))
                 .email("wokru@example.com")
-                .role(Role.USER)
+                .roles(List.of(Role.USER))
+                .password(pbkdf.generate("useruser".toCharArray()))
                 .avatarFileName(null)
                 .build();
 
-        userService.create(admin);
-        userService.create(ryszard);
-        userService.create(janina);
-        userService.create(wojciech);
+        em.persist(admin);
+        em.persist(ryszard);
+        em.persist(janina);
+        em.persist(wojciech);
 
         //routes
         Route gda_waw = Route.builder()
-                .id(1L)
                 .distance(100)
                 .duration(75)
                 .startingPoint("Gdańsk")
@@ -114,7 +109,6 @@ public class InitializedData {
                 .build();
 
         Route cra_pra = Route.builder()
-                .id(2L)
                 .distance(156)
                 .duration(45)
                 .startingPoint("Karków")
@@ -122,38 +116,36 @@ public class InitializedData {
                 .build();
 
         Route lon_ber = Route.builder()
-                .id(3L)
                 .distance(300)
                 .duration(60)
                 .startingPoint("London")
                 .destination("Berlin")
                 .build();
 
-        routeService.create(gda_waw);
-        routeService.create(cra_pra);
-        routeService.create(lon_ber);
+        em.persist(gda_waw);
+        em.persist(cra_pra);
+        em.persist(lon_ber);
 
         //tickets
         Ticket gda_waw1 = Ticket.builder()
-                .id(1L)
                 .dateTime(LocalDateTime.of(2021,10,30,10,30))
                 .cost(75.6)
                 .route(gda_waw)
+                .user(janina)
                 .build();
 
         //tickets
         Ticket gda_waw2 = Ticket.builder()
-                .id(2L)
                 .dateTime(LocalDateTime.of(2021,8,13,10,30))
                 .cost(120.99)
                 .route(gda_waw)
+                .user(wojciech)
                 .build();
 
-        ticketService.create(gda_waw1);
-        ticketService.create(gda_waw2);
+        em.persist(gda_waw1);
+        em.persist(gda_waw2);
 
-        requestContextController.deactivate();
-
+        gda_waw.setTickets(List.of(gda_waw1,gda_waw2));
     }
 
 }

@@ -5,6 +5,10 @@ import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.route.repository.RouteRepository;
 import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -14,8 +18,10 @@ import java.util.Optional;
 /**
  * Service layer for all business actions regarding ticket's route entity.
  */
-@ApplicationScoped
-@NoArgsConstructor//Empty constructor is required for creating proxy while CDI injection.
+@Stateless
+@LocalBean
+@NoArgsConstructor
+@RolesAllowed("ADMIN")//Role.ADMIN) TODO
 public class RouteService {
 
     /**
@@ -35,6 +41,7 @@ public class RouteService {
      * @param id id of the route
      * @return container with route entity
      */
+    @RolesAllowed({"ADMIN","USER"})//{Role.ADMIN,Role.USER}) TODO
     public Optional<Route> find(Long id) {
         return repository.find(id);
     }
@@ -43,6 +50,7 @@ public class RouteService {
     /**
      * @return container with route entity
      */
+    @RolesAllowed({"ADMIN","USER"})//{Role.ADMIN,Role.USER}) TODO
     public List<Route> findAll() {
         return repository.findAll();
     }
@@ -52,7 +60,6 @@ public class RouteService {
      *
      * @param route new route to be saved
      */
-    @Transactional
     public void create(Route route) {
         repository.create(route);
     }
@@ -62,7 +69,6 @@ public class RouteService {
      *
      * @param route route to be updated
      */
-    @Transactional
     public void update(Route route) {
         repository.update(route);
     }
@@ -72,7 +78,6 @@ public class RouteService {
      *
      * @param id existing route's id to be deleted
      */
-    @Transactional
     public void delete(Long id) {
         repository.delete(repository.find(id).orElseThrow());
     }

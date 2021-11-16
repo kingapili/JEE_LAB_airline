@@ -1,19 +1,23 @@
 package pl.edu.pg.eti.s176010.airline.user.servlet;
 
+import pl.edu.pg.eti.s176010.airline.controller.interceptor.binding.CatchEjbException;
 import pl.edu.pg.eti.s176010.airline.servlet.ServletUtility;
 import pl.edu.pg.eti.s176010.airline.user.dto.GetUserResponse;
 import pl.edu.pg.eti.s176010.airline.user.dto.GetUsersResponse;
+import pl.edu.pg.eti.s176010.airline.user.entity.Role;
 import pl.edu.pg.eti.s176010.airline.user.entity.User;
 import pl.edu.pg.eti.s176010.airline.user.service.UserService;
 
-import javax.inject.Inject;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
+import javax.ejb.EJBAccessException;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -21,16 +25,23 @@ import java.util.Optional;
  * Servlet for returning user's name from the active session if present.
  */
 @WebServlet(urlPatterns = UserServlet.Paths.USER + "/*")
+@RolesAllowed("ADMIN")//Role.USER) TODO
 public class UserServlet extends HttpServlet {
     /**
      * Service for user entity operations.
      */
-    private UserService service;
+    private UserService userService;
 
 
-    @Inject
-    public UserServlet(UserService service) {
-        this.service = service;
+    public UserServlet(){
+    }
+
+    /**
+     * @param userService service for managing users
+     */
+    @EJB
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -41,7 +52,7 @@ public class UserServlet extends HttpServlet {
         /**
          * Specified portrait for download and upload.
          */
-        public static final String USER = "/api/users";
+        public static final String USER = "/api_servlet/users";
 
     }
 
@@ -69,12 +80,14 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = ServletUtility.parseRequestPath(request);
-        if (path.matches(Patterns.USER)) {
-            getUser(request, response);
-            return;
-        } else if (path.matches(Patterns.USERS)) {
-            getUsers(request, response);
-            return;
+        try {
+            if (path.matches(Patterns.USER)) {
+                getUser(request, response);
+            } else if (path.matches(Patterns.USERS)) {
+                getUsers(request, response);
+            }
+        } catch (EJBAccessException ex) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
 
     }
@@ -82,7 +95,7 @@ public class UserServlet extends HttpServlet {
     private void getUsers(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.getWriter()
-                .write(jsonb.toJson(GetUsersResponse.entityToDtoMapper().apply(service.findAll())));
+                .write(jsonb.toJson(GetUsersResponse.entityToDtoMapper().apply(userService.findAll())));
     }
 
     private void getUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -90,7 +103,7 @@ public class UserServlet extends HttpServlet {
 
         response.setContentType("application/json");
         if (id != null) {
-            Optional<User> user = service.find(id);
+            Optional<User> user = userService.find(id);
             if (user.isPresent()) {
                 response.getWriter().write(jsonb.toJson(GetUserResponse.entityToDtoMapper().apply(user.get())));
                 return;

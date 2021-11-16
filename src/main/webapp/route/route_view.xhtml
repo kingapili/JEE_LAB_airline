@@ -12,50 +12,53 @@
     <ui:define name="content">
         <h:panelGroup layout="block">
             <article class="text--justified">
-                <header><h2>Route: <h:outputText value="#{routeView.route.name}"/></h2></header>
+                <header><h2>#{messages.route}: <h:outputText value="#{routeView.route.name}"/></h2></header>
                 <div class="route_grid">
                     <div class="route__from">
-                       From: <h:outputText value="#{routeView.route.startingPoint}"/>
+                        #{messages.from}: <h:outputText value="#{routeView.route.startingPoint}"/>
                     </div>
                     <div class="route__to">
-                        To: <h:outputText value="#{routeView.route.destination}"/>
+                        #{messages.to}: <h:outputText value="#{routeView.route.destination}"/>
                     </div>
                     <div class="route__time">Time: <h:outputText value="#{routeView.route.duration}"/> min</div>
                     <div class="route__distance">
-                        Distance: <h:outputText value="#{routeView.route.distance}"/> km
+                        #{messages.distance}: <h:outputText value="#{routeView.route.distance}"/> km
                     </div>
                 </div>
             </article>
             <article class="text--justified">
-                <header><h2>Tickets</h2></header>
-                <h:link outcome="/ticket/ticket_create.xhtml" value="create ticket"/>
-                <h:dataTable value="#{routeView.tickets.tickets}" var="ticket" styleClass="data-table">
+                <header><h2>#{messages.tickets}</h2></header>
+                <h:link rendered="#{facesContext.externalContext.isUserInRole('USER')}" outcome="/ticket/ticket_create.xhtml" value="#{messages.create_new}"/>
+                <h:form id="ticketForm">
+                    <h:dataTable id="ticketTable" value="#{routeView.tickets.tickets}" var="ticket" styleClass="data-table">
                     <h:column>
-                        <f:facet name="header">ticket id</f:facet>
+                        <f:facet name="header">#{messages.id}</f:facet>
                         <h:outputText value="#{ticket.id}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">view</f:facet>
-                        <h:link outcome="/ticket/ticket_view.xhtml" value="view">
+                        <f:facet name="header">#{messages.view}</f:facet>
+                        <h:link outcome="/ticket/ticket_view.xhtml" value="#{messages.view}">
                             <f:param name="id" value="#{ticket.id}"/>
                         </h:link>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">edit</f:facet>
-                        <h:link outcome="/ticket/ticket_edit.xhtml" value="edit">
+                        <f:facet name="header">#{messages.edit}</f:facet>
+                        <h:link outcome="/ticket/ticket_edit.xhtml" value="#{messages.edit}">
                             <f:param name="id" value="#{ticket.id}"/>
                         </h:link>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">delete</f:facet>
-                        <h:form>
-                            <h:commandButton styleClass="ui-button ui-control" value="delete"
+                        <f:facet name="header">#{messages.delete}</f:facet>
+
+                            <h:commandButton styleClass="ui-button ui-control" value="#{messages.delete}"
                                              action="#{routeView.deleteTicketAction(ticket)}">
                                 <f:param name="routeId" value="#{routeView.id}"/>
+                                <f:ajax execute="@this" render=":ticketForm:ticketTable"/>
                             </h:commandButton>
-                        </h:form>
+
                     </h:column>
                 </h:dataTable>
+                </h:form>
             </article>
         </h:panelGroup>
     </ui:define>

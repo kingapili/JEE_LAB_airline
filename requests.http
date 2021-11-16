@@ -1,34 +1,62 @@
-POST http://localhost:9080/airline/api/avatars/2
+
+// @no-cookie-jar
+POST http://localhost:9080/airline/api/users
+Content-Type: application/json;
+
+{
+  "email": "k.w@example.com",
+  "name": "Karolina Włodarczyk",
+  "password": "useruser",
+  "birthDate": "2016-01-25"
+}
+
+###
+
+
+// @no-cookie-jar
+POST http://localhost:9080/airline/api/avatars
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
 Content-Disposition: form-data; name="avatar"; filename="woman.png"
 
-< src/main/resources/pl.edu.pg.eti.s176010.airline.user.avatar/woman.png
+< src/main/resources/airline/woman.png
 --WebAppBoundary--
 
 ###
-GET http://localhost:9080/airline/api/users
+
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/user
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
-GET http://localhost:9080/airline/api/users/2
+// @no-cookie-jar
+GET http://localhost:9080/airline/api_servlet/users
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
-GET http://localhost:9080/airline/api/avatars/2
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/avatars
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
-DELETE http://localhost:9080/airline/api/avatars/2
+// @no-cookie-jar
+DELETE http://localhost:9080/airline/api/avatars
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
-PUT http://localhost:9080/airline/api/avatars/2
+// @no-cookie-jar
+PUT http://localhost:9080/airline/api/avatars
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
 Content-Disposition: form-data; name="avatar"; filename="woman.png"
 
-< src/main/resources/pl.edu.pg.eti.s176010.airline.user.avatar/man.png
+< src/main/resources/airline/man.png
 --WebAppBoundary--

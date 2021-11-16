@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+        <h:panelGroup layout="block">
+            <article class="text--justified">
+                <header><h2>#{messages["message.direct"]}</h2></header>
+                <h:form class="dmesssage__form">
+                    <div class="messsage__content">
+                        <h:outputLabel for="reciever" value="#{messages.to}:"/>
+                        <h:inputText class="ui-control" id="reciever" value="#{messageSend.reciever}"/>
+                        <h:outputLabel for="direct_message" value="#{messages.message}:"/>
+                        <h:inputTextarea class="ui-control ui-input" id="direct_message" value="#{messageSend.directContent}">
+                        </h:inputTextarea>
+                    </div>
+
+                    <div class="messsage__send">
+                        <h:commandButton class="ui-control ui-button" value="#{messages.send}"
+                                         action="#{messageSend.sendDirectAction()}">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandButton>
+                    </div>
+                </h:form>
+            </article>
+
+            <article class="text--justified">
+                <header><h2>#{messages["message.toAll"]}</h2></header>
+                <h:form class="messsage__form">
+                    <div class="messsage__content">
+                        <h:outputLabel for="message" value="#{messages.message}:"/>
+                        <h:inputTextarea class="ui-control ui-input" id="message" value="#{messageSend.content}" >
+                        </h:inputTextarea>
+                    </div>
+
+                    <div class="messsage__send">
+                        <h:commandButton class="ui-control ui-button" value="#{messages.send}"
+                                         action="#{messageSend.sendAction()}">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandButton>
+                    </div>
+                </h:form>
+            </article>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>

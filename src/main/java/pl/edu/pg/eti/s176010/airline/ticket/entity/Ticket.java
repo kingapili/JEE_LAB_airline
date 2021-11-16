@@ -46,9 +46,9 @@ public class Ticket implements Serializable {
     /**
      * Owner of this ticket.
      */
-    //@ManyToOne
-    //@JoinColumn(name ="user")
-    //private User user;
+    @ManyToOne
+    @JoinColumn(name ="user")
+    private User user;
 
     /**
      * Date for which ticket is bought.

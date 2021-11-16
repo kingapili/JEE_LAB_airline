@@ -1,21 +1,24 @@
-
+// @no-cookie-jar
 GET http://localhost:9080/airline/api/routes
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
+// @no-cookie-jar
 GET http://localhost:9080/airline/api/routes/2
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
+// @no-cookie-jar
 DELETE http://localhost:9080/airline/api/routes/1
-
-### Test czy zostaly usuniete elementy kategorii
-
-GET http://localhost:9080/airline/api/tickets/
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 
 ###
 
+// @no-cookie-jar
 PUT http://localhost:9080/airline/api/routes/2
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 Content-Type: application/json;
 
 {
@@ -30,7 +33,9 @@ Content-Type: application/json;
 
 ###
 
+// @no-cookie-jar
 POST http://localhost:9080/airline/api/routes
+Authorization: Basic ai5rb3dhbEBleGFtcGxlLmNvbTp1c2VydXNlcg==
 Content-Type: application/json;
 
 {

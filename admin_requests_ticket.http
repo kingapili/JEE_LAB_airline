@@ -1,0 +1,49 @@
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/tickets
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+###
+
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/tickets/1
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+###
+
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/routes/3/tickets
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+###
+
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/routes/3/tickets/1
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+
+
+###
+
+// @no-cookie-jar
+PUT http://localhost:9080/airline/api/routes/3/tickets/1
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+Content-Type: application/json;
+
+{
+  "cost": 99.99,
+  "dateTime": "2016-01-26T21:34:00"
+}
+
+###
+
+// @no-cookie-jar
+DELETE http://localhost:9080/airline/api/routes/3/tickets/1
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+###
+
+// @no-cookie-jar
+POST http://localhost:9080/airline/api/routes/2/tickets/
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+Content-Type: application/json;
+
+{
+  "cost": 105.99,
+  "dateTime": "2016-01-25T21:34:00",
+  "routeId": 1
+}

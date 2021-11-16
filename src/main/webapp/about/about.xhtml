@@ -7,10 +7,9 @@
 
     <ui:define name="content">
         <article class="text--justified">
-            <header><h2>About project</h2></header>
+            <header><h2>#{msg.aboutProjectHeader}</h2></header>
             <section>
-                <p>The <span class="text--italic text--bold">Simple Airline</span> is a project created for the laboratory classes
-                    at Gdansk University of Technology.</p>
+                <h:outputText value="#{msg.aboutProject}" escape="false"/>
             </section>
         </article>
     </ui:define>

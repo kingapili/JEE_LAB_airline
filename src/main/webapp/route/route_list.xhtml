@@ -8,26 +8,29 @@
     <ui:define name="content">
         <h:panelGroup layout="block">
             <article class="text--justified">
-                <header><h2>Routes</h2></header>
-                <h:dataTable value="#{routeList.routes.routes}" var="route" styleClass="data-table">
+                <header><h2>#{messages["nav.routes"]}</h2></header>
+                <h:form id="routeForm">
+                    <h:dataTable id="routeTable" value="#{routeList.routes.routes}" var="route" styleClass="data-table">
                     <h:column>
-                        <f:facet name="header">name</f:facet>
+                        <f:facet name="header">#{messages.name}</f:facet>
                         <h:outputText value="#{route.name}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">view</f:facet>
-                        <h:link outcome="/route/route_view.xhtml" value="view">
+                        <f:facet name="header">#{messages.view}</f:facet>
+                        <h:link outcome="/route/route_view.xhtml" value="#{messages.view}">
                             <f:param name="id" value="#{route.id}"/>
                         </h:link>
                     </h:column>
-                    <h:column>
-                        <f:facet name="header">delete</f:facet>
-                        <h:form>
-                            <h:commandButton styleClass="ui-button ui-control" value="delete"
-                                             action="#{routeList.deleteAction(route)}"/>
-                        </h:form>
+                    <h:column rendered="#{facesContext.externalContext.isUserInRole('ADMIN')}">
+                        <f:facet name="header">#{messages.delete}</f:facet>
+
+                            <h:commandButton styleClass="ui-button ui-control" value="#{messages.delete}"
+                                             action="#{routeList.deleteAction(route)}">
+                            <f:ajax execute="@this" render=":routeForm:routeTable"/>
+                            </h:commandButton>
+
                     </h:column>
-                </h:dataTable>
+                </h:dataTable> </h:form>
             </article>
         </h:panelGroup>
     </ui:define>

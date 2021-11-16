@@ -14,17 +14,17 @@
         <h:outputStylesheet library="ticket" name="css/ticket_edit.css"/><!-- Automatically relocated to head. -->
         <h:panelGroup layout="block">
             <article class="text--justified">
-                <header><h2>Edit ticket info</h2></header>
+                <header><h2>#{messages["ticket.edit"]}</h2></header>
                 <h:form class="ticket__form">
                     <div class="ticket__datetime">
-                    <h:outputLabel for="date" value="Date:"/>
+                    <h:outputLabel for="date" value="#{messages.date}:"/>
                     <h:inputText class="ui-control ui-input" id="date" value="#{ticketEdit.ticket.datetime}">
                         <f:convertDateTime type="localDateTime" pattern = "dd-MM-yyyy HH:mm"/>
                     </h:inputText>
                     </div>
 
                     <div class="ticket__save">
-                    <h:commandButton class="ui-control ui-button" value="Update"
+                    <h:commandButton class="ui-control ui-button" value="#{messages.update}"
                                      action="#{ticketEdit.saveAction()}"/>
                     </div>
                 </h:form>

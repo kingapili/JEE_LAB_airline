@@ -11,6 +11,10 @@
         <feature>jaxrs-2.1</feature>
         <feature>jpa-2.2</feature>
         <feature>ejb-3.2</feature>
+        <feature>ejb-3.2</feature>
+        <feature>appSecurity-3.0</feature>
+        <feature>passwordUtilities-1.0</feature>
+        <feature>websocket-1.1</feature>
     </featureManager>
 
     <dataSource id="SimpleAirlineTicketPortalDataSource" jndiName="jdbc/SimpleAirlineTicketPortal">
@@ -26,7 +30,6 @@
     </library>
 
     <logging consoleLogLevel="INFO" />
-    <logging consoleLogLevel="INFO"/>
     <logging traceSpecification="eclipselink.sql=all"
              traceFileName="stdout"
              traceFormat="BASIC"/>

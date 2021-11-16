@@ -1,0 +1,51 @@
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/routes
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+
+###
+
+// @no-cookie-jar
+GET http://localhost:9080/airline/api/routes/2
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+
+###
+
+// @no-cookie-jar
+DELETE http://localhost:9080/airline/api/routes/1
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+
+###
+
+// @no-cookie-jar
+PUT http://localhost:9080/airline/api/routes/2
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+Content-Type: application/json;
+
+{
+  "destination": "Kraków",
+
+  "startingPoint":"Praga",
+
+  "duration": 120,
+
+  "distance": 1000
+}
+
+###
+
+// @no-cookie-jar
+POST http://localhost:9080/airline/api/routes
+Authorization: Basic YWRtaW5AYWlybGluZS5leGFtcGxlLmNvbTphZG1pbmFkbWlu
+Content-Type: application/json;
+
+{
+  "destination": "Berlin",
+
+  "startingPoint":"Moskwa",
+
+
+  "duration": 180,
+
+  "distance": 1500
+}
+

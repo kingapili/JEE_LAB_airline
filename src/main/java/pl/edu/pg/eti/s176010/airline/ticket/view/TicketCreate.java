@@ -10,9 +10,8 @@ import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Conversation;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
@@ -30,7 +29,7 @@ public class TicketCreate implements Serializable {
     /**
      * Service for managing tickets.
      */
-    private TicketService service;
+    private TicketService ticketService;
 
     /**
      * Service for managing routes.
@@ -57,11 +56,20 @@ public class TicketCreate implements Serializable {
     @Getter
     private List<RouteModel> routes;
 
-
-    @Inject
-    public TicketCreate(TicketService service,RouteService routeService, Conversation conversation) {
-        this.service = service;
+    /**
+     * @param routeService service for managing routes
+     */
+    @EJB
+    public void setRouteService(RouteService routeService) {
         this.routeService = routeService;
+    }
+
+    /**
+     * @param ticketService service for managing routes
+     */
+    @EJB
+    public void setTicketService(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     /**
@@ -81,7 +89,7 @@ public class TicketCreate implements Serializable {
     public String saveAction() {
         Ticket newTicket = TicketCreateModel.modelToEntityMapper(
                 routeId -> routeService.find(routeId).orElseThrow()).apply(ticket);
-        service.create(newTicket);
+        ticketService.createForCallerPrincipal(newTicket);
         return "/ticket/ticket_view.xhtml?faces-redirect=true&id="+newTicket.getId();
     }
 

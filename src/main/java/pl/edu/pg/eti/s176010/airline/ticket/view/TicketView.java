@@ -6,9 +6,9 @@ import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.ticket.model.TicketModel;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class TicketView implements Serializable {
     /**
      * Service for managing tickets.
      */
-    private final TicketService service;
+    private TicketService ticketService;
 
     /**
      * Ticket id.
@@ -40,9 +40,15 @@ public class TicketView implements Serializable {
     @Getter
     private TicketModel ticket;
 
-    @Inject
-    public TicketView(TicketService service) {
-        this.service = service;
+    public TicketView() {
+    }
+
+    /**
+     * @param ticketService service for managing routes
+     */
+    @EJB
+    public void setTicketService(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     /**
@@ -50,7 +56,7 @@ public class TicketView implements Serializable {
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        Optional<Ticket> ticket = service.find(id);
+        Optional<Ticket> ticket = ticketService.findBasedOnCallerPrincipal(id);
         if (ticket.isPresent()) {
             this.ticket = TicketModel.entityToModelMapper().apply(ticket.get());
         } else {
@@ -59,5 +65,5 @@ public class TicketView implements Serializable {
         }
     }
 
-    
+
 }

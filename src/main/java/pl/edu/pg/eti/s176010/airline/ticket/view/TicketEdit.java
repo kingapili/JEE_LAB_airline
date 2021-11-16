@@ -6,9 +6,9 @@ import pl.edu.pg.eti.s176010.airline.ticket.entity.Ticket;
 import pl.edu.pg.eti.s176010.airline.ticket.model.TicketEditModel;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class TicketEdit implements Serializable {
     /**
      * Service for managing tickets.
      */
-    private final TicketService service;
+    private TicketService ticketService;
 
     /**
      * Ticket id.
@@ -41,9 +41,15 @@ public class TicketEdit implements Serializable {
     private TicketEditModel ticket;
 
 
-    @Inject
-    public TicketEdit(TicketService service) {
-        this.service = service;
+    public TicketEdit() {
+    }
+
+    /**
+     * @param ticketService service for managing routes
+     */
+    @EJB
+    public void setTicketService(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     /**
@@ -51,7 +57,7 @@ public class TicketEdit implements Serializable {
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        Optional<Ticket> ticket = service.find(id);
+        Optional<Ticket> ticket = ticketService.findBasedOnCallerPrincipal(id);
         if (ticket.isPresent()) {
             this.ticket = TicketEditModel.entityToModelMapper().apply(ticket.get());
         } else {
@@ -66,7 +72,7 @@ public class TicketEdit implements Serializable {
      * @return navigation case to the same page
      */
     public String saveAction() {
-        service.update(TicketEditModel.modelToEntityUpdater().apply(service.find(id).orElseThrow(), ticket));
+        ticketService.update(TicketEditModel.modelToEntityUpdater().apply(ticketService.findBasedOnCallerPrincipal(id).orElseThrow(), ticket));
         return "/ticket/ticket_view?faces-redirect=true&includeViewParams=true";
     }
 

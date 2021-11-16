@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * Repository for route entity. Repositories should be used in business layer (e.g.: in services).
  */
-@RequestScoped
+@Dependent
 @Log
 public class RouteRepository implements Repository<Route, Long> {
 

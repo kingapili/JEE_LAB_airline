@@ -1,15 +1,16 @@
 package pl.edu.pg.eti.s176010.airline.route.controller;
 
+import pl.edu.pg.eti.s176010.airline.controller.interceptor.binding.CatchEjbException;
 import pl.edu.pg.eti.s176010.airline.route.dto.CreateRouteRequest;
 import pl.edu.pg.eti.s176010.airline.route.dto.GetRouteResponse;
 import pl.edu.pg.eti.s176010.airline.route.dto.GetRoutesResponse;
 import pl.edu.pg.eti.s176010.airline.route.dto.UpdateRouteRequest;
 import pl.edu.pg.eti.s176010.airline.route.entity.Route;
 import pl.edu.pg.eti.s176010.airline.route.service.RouteService;
-import pl.edu.pg.eti.s176010.airline.ticket.controller.RouteTicketController;
 import pl.edu.pg.eti.s176010.airline.ticket.service.TicketService;
 
-import javax.inject.Inject;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,12 +21,14 @@ import java.util.Optional;
  * REST controller for {@link pl.edu.pg.eti.s176010.airline.route.entity.Route} entity.
  */
 @Path("/routes")
+@RolesAllowed("ADMIN")//Role.ADMIN) TODO
+@CatchEjbException
 public class RouteController {
 
     /**
      * Service for managing routes.
      */
-    private RouteService service;
+    private RouteService routeService;
 
     /**
      * Service for managing routes.
@@ -41,15 +44,15 @@ public class RouteController {
     /**
      * @param service service for managing routes
      */
-    @Inject
-    public void setService(RouteService service) {
-        this.service = service;
+    @EJB
+    public void setRouteService(RouteService service) {
+        this.routeService = service;
     }
 
     /**
      * @param ticketService service for managing routes
      */
-    @Inject
+    @EJB
     public void setTicketService(TicketService ticketService) {
         this.ticketService = ticketService;
     }
@@ -59,8 +62,9 @@ public class RouteController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN","USER"})//{Role.ADMIN,Role.USER}) TODO
     public Response getRoutes() {
-        return Response.ok(GetRoutesResponse.entityToDtoMapper().apply(service.findAll())).build();
+        return Response.ok(GetRoutesResponse.entityToDtoMapper().apply(routeService.findAll())).build();
     }
 
     /**
@@ -71,9 +75,9 @@ public class RouteController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-
+    @RolesAllowed({"ADMIN","USER"})//{Role.ADMIN,Role.USER}) TODO
     public Response getRoute(@PathParam("id") Long id) {
-        Optional<Route> route = service.find(id);
+        Optional<Route> route = routeService.find(id);
         if (route.isPresent()) {
             return Response.ok(GetRouteResponse.entityToDtoMapper().apply(route.get())).build();
         } else {
@@ -91,7 +95,7 @@ public class RouteController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postRoute(CreateRouteRequest request) {
         Route route = CreateRouteRequest.dtoToEntityMapper().apply(request);
-        service.create(route);
+        routeService.create(route);
         return Response.created(UriBuilder.fromResource(RouteController.class).path(RouteController.class, "getRoute")
                 .build(route.getId())).build();
     }
@@ -106,12 +110,12 @@ public class RouteController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putRoute(@PathParam("id") Long id, UpdateRouteRequest request) {
-        Optional<Route> route = service.find(id);
+        Optional<Route> route = routeService.find(id);
 
         if (route.isPresent()) {
             UpdateRouteRequest.dtoToEntityUpdater().apply(route.get(), request);
 
-            service.update(route.get());
+            routeService.update(route.get());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -126,9 +130,9 @@ public class RouteController {
     @DELETE
     @Path("{id}")
     public Response deleteRoute(@PathParam("id") Long id) {
-        Optional<Route> route = service.find(id);
+        Optional<Route> route = routeService.find(id);
         if (route.isPresent()) {
-            service.delete(id);
+            routeService.delete(id);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
